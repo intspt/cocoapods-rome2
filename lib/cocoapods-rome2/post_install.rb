@@ -95,28 +95,4 @@ Pod::HooksManager.register('cocoapods-rome2', :post_install) do |installer_conte
   frameworks = Pathname.glob("build/*/*/*.framework").reject { |f| f.to_s =~ /Pods.*\.framework/ }
   frameworks += Pathname.glob("build/*.framework").reject { |f| f.to_s =~ /Pods.*\.framework/ }
   Pod::UI.puts "Built #{frameworks.count} #{'frameworks'.pluralize(frameworks.count)}"
-
-  destination.rmtree if destination.directory?
-
-  installer_context.umbrella_targets.each do |umbrella|
-    umbrella.specs.each do |spec|
-      consumer = spec.consumer(umbrella.platform_name)
-      file_accessor = Pod::Sandbox::FileAccessor.new(sandbox.pod_dir(spec.root.name), consumer)
-      frameworks += file_accessor.vendored_libraries
-      frameworks += file_accessor.vendored_frameworks
-    end
-  end
-  frameworks.uniq!
-
-  Pod::UI.puts "Copying #{frameworks.count} #{'frameworks'.pluralize(frameworks.count)} " \
-    "to `#{destination.relative_path_from Pathname.pwd}`"
-
-  frameworks.each do |framework|
-    FileUtils.mkdir_p destination
-    FileUtils.cp_r framework, destination, :remove_destination => true
-  end
-
-  copy_dsym_files(sandbox_root.parent + 'dSYM', configuration) if enable_dsym
-
-  build_dir.rmtree if build_dir.directory?
 end
