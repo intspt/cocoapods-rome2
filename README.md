@@ -8,7 +8,8 @@ Xcode, e.g. for a Swift script.
 ## Installation
 
 ```bash
-$ gem install cocoapods-rome
+$ gem build cocoapods-rome2.gemspec
+$ sudo gem install cocoapods-rome2-1.0.0.gem -n=/usr/local/bin
 ```
 
 ## Important
@@ -24,7 +25,7 @@ Write a simple Podfile, like this:
 ```ruby
 platform :osx, '10.10'
 
-plugin 'cocoapods-rome'
+plugin 'cocoapods-rome2'
 
 target 'caesar' do
   pod 'Alamofire'
@@ -36,7 +37,7 @@ end
 ```ruby
 platform :ios, '8.0'
 
-plugin 'cocoapods-rome', { :pre_compile => Proc.new { |installer|
+plugin 'cocoapods-rome2', { :pre_compile => Proc.new { |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
             config.build_settings['SWIFT_VERSION'] = '4.0'
