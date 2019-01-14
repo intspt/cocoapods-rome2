@@ -62,7 +62,7 @@ end
 
 Pod::HooksManager.register('cocoapods-rome2', :post_install) do |installer_context, user_options|
   if user_options["no_build"]
-    return
+    next
   end
   enable_dsym = user_options.fetch('dsym', true)
   configuration = user_options.fetch('configuration', 'Debug')
