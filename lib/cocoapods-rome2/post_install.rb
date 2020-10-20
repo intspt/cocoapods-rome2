@@ -11,23 +11,23 @@ def build_for_iosish_platform(sandbox, build_dir, target, device, simulator, con
   xcodebuild(sandbox, target_label, device, deployment_target, configuration)
   xcodebuild(sandbox, target_label, simulator, deployment_target, configuration)
 
-  spec_names = target.specs.map { |spec| [spec.root.name, spec.root.module_name] }.uniq
-  spec_names.each do |root_name, module_name|
-    executable_path = "#{build_dir}/#{root_name}"
-    device_lib = "#{build_dir}/#{configuration}-#{device}/#{root_name}/#{module_name}.framework/#{module_name}"
-    device_framework_lib = File.dirname(device_lib)
-    simulator_lib = "#{build_dir}/#{configuration}-#{simulator}/#{root_name}/#{module_name}.framework/#{module_name}"
+  # spec_names = target.specs.map { |spec| [spec.root.name, spec.root.module_name] }.uniq
+  # spec_names.each do |root_name, module_name|
+  #   executable_path = "#{build_dir}/#{root_name}"
+  #   device_lib = "#{build_dir}/#{configuration}-#{device}/#{root_name}/#{module_name}.framework/#{module_name}"
+  #   device_framework_lib = File.dirname(device_lib)
+  #   simulator_lib = "#{build_dir}/#{configuration}-#{simulator}/#{root_name}/#{module_name}.framework/#{module_name}"
 
-    next unless File.file?(device_lib) && File.file?(simulator_lib)
+  #   next unless File.file?(device_lib) && File.file?(simulator_lib)
 
-    lipo_log = `lipo -create -output #{executable_path} #{device_lib} #{simulator_lib}`
-    puts lipo_log unless File.exist?(executable_path)
+  #   lipo_log = `lipo -create -output #{executable_path} #{device_lib} #{simulator_lib}`
+  #   puts lipo_log unless File.exist?(executable_path)
 
-    FileUtils.mv executable_path, device_lib, :force => true
-    FileUtils.mv device_framework_lib, build_dir, :force => true
-    FileUtils.rm simulator_lib if File.file?(simulator_lib)
-    FileUtils.rm device_lib if File.file?(device_lib)
-  end
+  #   FileUtils.mv executable_path, device_lib, :force => true
+  #   FileUtils.mv device_framework_lib, build_dir, :force => true
+  #   FileUtils.rm simulator_lib if File.file?(simulator_lib)
+  #   FileUtils.rm device_lib if File.file?(device_lib)
+  # end
 end
 
 def xcodebuild(sandbox, target, sdk='macosx', deployment_target=nil, configuration)
